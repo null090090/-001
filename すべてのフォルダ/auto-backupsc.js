@@ -4,7 +4,9 @@
 _______________________  
 - CODE NAME : backup sc
 -----------------------
-- CREATORE : salomon
+- CREATORE : ren collins
+-----------------------
+- DM CREATOR : wa.me/6281324846720
 -----------------------
 - SUMBER : https://whatsapp.com/channel/0029Vb3qQSk77qVKayc2aT21/105
 _______________________
