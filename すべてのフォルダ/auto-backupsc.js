@@ -1,3 +1,16 @@
+/* 
+
+--- POST BY SALOMON ---
+_______________________  
+- CODE NAME : backup sc
+-----------------------
+- CREATORE : salomon
+-----------------------
+- SUMBER : https://whatsapp.com/channel/0029Vb3qQSk77qVKayc2aT21/105
+_______________________
+
+*/
+
 import fs from "fs";
 import cp, { exec as _exec } from "child_process";
 import { promisify } from "util";
