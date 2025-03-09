@@ -13,6 +13,8 @@ _______________________
 
 */
 
+// taro import ini ke handle.js
+import { createCard } from './lib/welcome.js';
 
 // simpan di ./lib/welcome.js
 import { createCanvas, loadImage } from 'canvas';
