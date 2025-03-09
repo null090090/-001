@@ -77,7 +77,7 @@ export const createCard = async (avatarUrl, totalMembers, groupName, userName, i
     return canvas.toBuffer('image/png');
 };
 
-// di bagian handler kalian ubah case welcome/leave kalian jadi gini :
+// di bagian handler kalian ubah case add/remove kalian jadi gini :
 		case 'add':
 		case 'remove':
 			if (chat.welcome) {
