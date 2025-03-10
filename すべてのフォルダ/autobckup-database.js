@@ -18,28 +18,60 @@ _______________________
 import fs from 'fs';
 import axios from 'axios';
 
-const githubToken = 'YOUR_TOKEN';
-const owner = 'YOUR_GITHUB_USERNAME';
-const repo = 'YOUR_REPO_NAME';
+const githubToken = '';
+const owner = '';
+const repo = '';
 const branch = 'main';
 const filePath = 'database.json';
-const githubFilePath = `backup/${filePath}`;
-const targetNumber = '62XXXXXXXXXX@s.whatsapp.net';
+const targetNumber = '';
+
+let isUploading = false;
+let lastUploadTime = 0;
+const COOLDOWN_PERIOD = 60000;
 
 async function uploadToGitHub(conn) {
+  const currentTime = Date.now();
+  
+  if (isUploading) {
+    console.log("Upload sedang berlangsung, menghindari duplikasi");
+    return;
+  }
+  
+  if (currentTime - lastUploadTime < COOLDOWN_PERIOD) {
+    console.log("Cooldown aktif, menghindari upload berlebihan");
+    return;
+  }
+  
   try {
-    if (!fs.existsSync(filePath)) return;
+    isUploading = true;
+    
+    if (!fs.existsSync(filePath)) {
+      isUploading = false;
+      return;
+    }
 
     let fileContent = fs.readFileSync(filePath, 'utf-8');
     let base64Content = Buffer.from(fileContent).toString('base64');
-    let currentTime = new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
-    let date = new Date().toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    let time = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+    
+    const now = new Date();
+    const day = now.getDate().toString().padStart(2, '0');
+    const month = (now.getMonth() + 1).toString().padStart(2, '0');
+    const year = now.getFullYear();
+    const hours = now.getHours().toString().padStart(2, '0');
+    const minutes = now.getMinutes().toString().padStart(2, '0');
+    const seconds = now.getSeconds().toString().padStart(2, '0');
+    
+    const timestampedFileName = `database:date(${day},${month},${year})${hours}${minutes}${seconds}.json`;
+    const githubFilePath = `backup/${timestampedFileName}`;
+    
+    let currentTimeFormatted = now.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' });
+    let date = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    let time = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-    await axios.put(
+    const response = await axios.put(
       `https://api.github.com/repos/${owner}/${repo}/contents/${githubFilePath}`,
       {
-        message: `Auto backup database.json - ${currentTime}`,
+        message: `Auto backup database.json - ${currentTimeFormatted}`,
         content: base64Content,
         branch: branch,
       },
@@ -51,18 +83,40 @@ async function uploadToGitHub(conn) {
       }
     );
 
-    let repoUrl = `https://github.com/${owner}/${repo}/blob/${branch}/${githubFilePath}`;
-    let message = `*Auto Backup Database Aktif !*\n\n> 📅 *Date* : ${date} ${time}\n> 🔗 *Repository* : ${repoUrl}`;
+    if (response.status === 201 || response.status === 200) {
+      let repoUrl = `https://github.com/${owner}/${repo}/blob/${branch}/${githubFilePath}`;
+      let message = `*Auto Backup Database Aktif !*\n\n> 📅 *Date* : ${date} ${time}\n> 🔗 *Repository* : ${repoUrl}`;
 
-    console.log(message);
-    if (conn) await conn.sendMessage(targetNumber, { text: message });
+      console.log(message);
+      
+      if (conn) {
+        await conn.sendMessage(targetNumber, { text: message })
+          .catch(err => console.error("Error mengirim pesan WhatsApp:", err.message));
+      }
+      
+      lastUploadTime = Date.now();
+    }
 
   } catch (error) {
-    console.error(error.response?.data || error.message);
+    console.error("Error saat upload:", error.response?.data?.message || error.message);
+  } finally {
+    isUploading = false;
   }
 }
 
-setInterval(() => {
-  let conn = global.conn;
-  if (conn) uploadToGitHub(conn);
-}, 5 * 60 * 1000);
+let backupInterval = null;
+
+function startBackupInterval() {
+  if (backupInterval) {
+    clearInterval(backupInterval);
+  }
+  
+  backupInterval = setInterval(() => {
+    let conn = global.conn;
+    if (conn) uploadToGitHub(conn);
+  }, 5 * 60 * 60 * 1000);
+  
+  console.log("Jadwal backup dimulai");
+}
+
+startBackupInterval();
