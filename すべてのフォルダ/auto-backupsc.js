@@ -21,7 +21,7 @@ let exec = promisify(_exec).bind(cp);
 
 async function backupScript(conn) {
    try {
-      let namaFileZip = `BackupScript.zip`;
+      let namaFileZip = "BackupScript.zip";
       const daftarPengecualian = ["node_modules/*", ".cache/*", ".npm/*", "sessions/*", ".config/*"];
       const argumenPengecualian = daftarPengecualian.map(item => `-x "${item}"`).join(' ');
 
@@ -30,7 +30,7 @@ async function backupScript(conn) {
       let tanggal = waktuSekarang.toLocaleDateString("id-ID", options);
       let jam = waktuSekarang.toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
-      let groupId = "// id gc kamu.....!";
+      let groupId = "123456789@g.us"; 
       console.log(`Auto Backup Aktif ${tanggal} ${jam}`);
       await conn.sendMessage(groupId, { text: `Auto Backup Aktif ${tanggal} ${jam}\nFile Backup Akan Terkirim....` });
 
@@ -67,6 +67,13 @@ async function backupScript(conn) {
 
    } catch (error) {
       console.error("Kesalahan backup:", error);
+      try {
+         if (conn && groupId) {
+            await conn.sendMessage(groupId, { text: `Error saat backup: ${error.message}` });
+         }
+      } catch (sendError) {
+         console.error("Gagal mengirim pesan error:", sendError);
+      }
    }
 }
 
