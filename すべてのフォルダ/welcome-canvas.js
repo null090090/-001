@@ -13,6 +13,9 @@ _______________________
 
 */
 
+// ukuran canvas 1280 x 800
+// banner kalo males ubah tinggal pake banner dari mimin, kalo mau ubah tolong di edit dulu yah image nya biar pas welcome nya !
+
 // taro import ini ke handle.js
 import { createCard } from './lib/welcome.js';
 
@@ -28,8 +31,8 @@ export const createCard = async (avatarUrl, totalMembers, groupName, userName, i
         : userName.length > 9 ? `${userName.slice(0, 8)}..` : userName;
 
     const backgroundUrl = isWelcome 
-        ? "https://raw.githubusercontent.com/nooob00023/tmp/main/uploads/1741571259681.png"  // jika tidak ada alternatif uploader, pake uploader github saya aja
-        : "https://raw.githubusercontent.com/nooob00023/tmp/main/uploads/1741571270556.png"; // jika tidak ada alternatif uploader, pake uploader github saya aja
+        ? "https://raw.githubusercontent.com/nooob00023/tmp/main/uploads/1741571259681.png"  
+        : "https://raw.githubusercontent.com/nooob00023/tmp/main/uploads/1741571270556.png"; 
 
     const backgroundImage = await loadImage(backgroundUrl).catch(() => {
         console.error('Failed to load background image.');
