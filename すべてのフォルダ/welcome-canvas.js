@@ -28,8 +28,8 @@ export const createCard = async (avatarUrl, totalMembers, groupName, userName, i
         : userName.length > 9 ? `${userName.slice(0, 8)}..` : userName;
 
     const backgroundUrl = isWelcome 
-        ? "bg welcome"  // jika tidak ada alternatif uploader, pake uploader github saya aja
-        : "bg leave"; // jika tidak ada alternatif uploader, pake uploader github saya aja
+        ? "https://raw.githubusercontent.com/nooob00023/tmp/main/uploads/1741571259681.png"  // jika tidak ada alternatif uploader, pake uploader github saya aja
+        : "https://raw.githubusercontent.com/nooob00023/tmp/main/uploads/1741571270556.png"; // jika tidak ada alternatif uploader, pake uploader github saya aja
 
     const backgroundImage = await loadImage(backgroundUrl).catch(() => {
         console.error('Failed to load background image.');
