@@ -14,7 +14,7 @@ _______________________
 */
 
 // penggunaan :
-// attp text|50 (50 itu ukuran font nya, jika ngetik banyak ukurannya 20-50 jika dikit 100-200 di sesuaikan aja)
+// ttp text|50 (50 itu ukuran font nya, jika ngetik banyak ukurannya 20-50 jika dikit 100-200 di sesuaikan aja)
 // install module nya dulu terus sf plugins nya
 // untuk base lain di sesuaikan aja yah
 
@@ -42,9 +42,9 @@ let handler = async (m, { conn, args }) => {
     }
 };
 
-handler.help = ['attp'];
+handler.help = ['ttp'];
 handler.tags = ['sticker'];
-handler.command = /^attp$/i;
+handler.command = /^ttp$/i;
 
 export default handler;
 
